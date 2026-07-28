@@ -1,0 +1,21 @@
+# Node modules
+frontend/node_modules
+
+# React build
+frontend/build
+
+# Maven target
+backend/target
+
+# Logs
+*.log
+
+# Environment files
+.env
+
+# IDE files
+.idea
+.vscode
+
+# OS files
+.DS_Store

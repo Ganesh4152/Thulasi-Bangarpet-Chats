@@ -1,15 +1,31 @@
-function Menu(){
+import React, { useEffect, useState } from "react";
+import api from "../services/api";
 
-return(
+function Menu() {
 
-<div className="container mt-5">
+    const [menu, setMenu] = useState([]);
 
-<h1>Menu Page</h1>
+    useEffect(() => {
+        api.get("/menu")
+            .then((response) => setMenu(response.data))
+            .catch((error) => console.error(error));
+    }, []);
 
-</div>
+    return (
+        <div className="container">
+            <h2>Thulasi Bangarpet Chats</h2>
 
-)
+            {menu.map((item) => (
+                <div key={item.id}>
+                    <h3>{item.name}</h3>
 
+                    <p>{item.description}</p>
+
+                    <strong>₹ {item.price}</strong>
+                </div>
+            ))}
+        </div>
+    );
 }
 
 export default Menu;

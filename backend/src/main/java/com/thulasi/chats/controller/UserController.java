@@ -1,0 +1,30 @@
+package com.thulasi.chats.controller;
+
+import java.util.List;
+
+import org.springframework.web.bind.annotation.*;
+
+import com.thulasi.chats.entity.User;
+import com.thulasi.chats.service.UserService;
+
+@RestController
+@RequestMapping("/api/users")
+@CrossOrigin(origins = "*")
+public class UserController {
+
+    private final UserService service;
+
+    public UserController(UserService service) {
+        this.service = service;
+    }
+
+    @GetMapping
+    public List<User> getUsers() {
+        return service.getAllUsers();
+    }
+
+    @PostMapping("/register")
+    public User register(@RequestBody User user) {
+        return service.register(user);
+    }
+}

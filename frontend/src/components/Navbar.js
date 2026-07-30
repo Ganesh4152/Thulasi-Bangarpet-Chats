@@ -1,37 +1,22 @@
+import React from "react";
 import { Link } from "react-router-dom";
 
 function Navbar() {
+  return (
+    <nav className="navbar">
+      <div className="logo">
+        <h2>🍽️ Thulasi Bangarpet Chats</h2>
+      </div>
 
-return(
-
-<nav className="navbar navbar-expand-lg navbar-dark bg-success">
-
-<div className="container">
-
-<Link className="navbar-brand" to="/">
-🍽️ Thulasi Bangarpet Chats
-</Link>
-
-<div>
-
-<Link className="btn btn-light m-1" to="/">Home</Link>
-
-<Link className="btn btn-light m-1" to="/menu">Menu</Link>
-
-<Link className="btn btn-light m-1" to="/cart">Cart</Link>
-
-<Link className="btn btn-light m-1" to="/orders">Orders</Link>
-
-<Link className="btn btn-warning m-1" to="/login">Login</Link>
-
-</div>
-
-</div>
-
-</nav>
-
-)
-
+      <ul className="nav-links">
+        <li><Link to="/">Home</Link></li>
+        <li><Link to="/menu">Menu</Link></li>
+        <li><Link to="/orders">Orders</Link></li>
+        <li><Link to="/login">Login</Link></li>
+        <li><Link to="/cart">Cart 🛒</Link></li>
+      </ul>
+    </nav>
+  );
 }
 
 export default Navbar;

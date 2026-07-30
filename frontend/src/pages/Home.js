@@ -1,91 +1,33 @@
-function Home(){
+import React, { useState } from "react";
 
-return(
+import Hero from "../components/Hero";
+import SearchBar from "../components/SearchBar";
+import CategorySection from "../components/CategorySection";
+import PopularItems from "../components/PopularItems";
+import Footer from "../components/Footer";
 
-<div className="container mt-5">
+function Home() {
 
-<div className="text-center">
+  const [searchTerm, setSearchTerm] = useState("");
 
-<h1>Welcome to Thulasi Bangarpet Chats</h1>
+  return (
+    <>
+      <Hero />
 
-<h4>Best Chats in Town</h4>
+      <SearchBar
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+      />
 
-<img
-src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=900"
-className="img-fluid rounded mt-4"
-alt="Food"
-/>
+      <CategorySection />
 
-</div>
+      <PopularItems
+        searchTerm={searchTerm}
+      />
 
-<div className="row mt-5">
-
-<div className="col-md-4">
-
-<div className="card">
-
-<div className="card-body">
-
-<h3>Pani Puri</h3>
-
-<p>₹40</p>
-
-<button className="btn btn-success">
-Order
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-<div className="col-md-4">
-
-<div className="card">
-
-<div className="card-body">
-
-<h3>Masala Puri</h3>
-
-<p>₹50</p>
-
-<button className="btn btn-success">
-Order
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-<div className="col-md-4">
-
-<div className="card">
-
-<div className="card-body">
-
-<h3>Bhel Puri</h3>
-
-<p>₹60</p>
-
-<button className="btn btn-success">
-Order
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-)
-
+      <Footer />
+    </>
+  );
 }
 
 export default Home;

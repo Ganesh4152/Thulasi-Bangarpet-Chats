@@ -2,6 +2,8 @@ package com.thulasi.chats.entity;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "menu_items")
 public class MenuItem {
@@ -14,9 +16,11 @@ public class MenuItem {
 
     private String description;
 
-    private Double price;
+    private BigDecimal price;
 
-    private String imageUrl;
+    private String image;
+
+    private Boolean available = true;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -49,20 +53,28 @@ public class MenuItem {
         this.description = description;
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getImage() {
+        return image;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public Boolean getAvailable() {
+        return available;
+    }
+
+    public void setAvailable(Boolean available) {
+        this.available = available;
     }
 
     public Category getCategory() {

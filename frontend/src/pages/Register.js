@@ -1,14 +1,17 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Register() {
+  const navigate = useNavigate();
+
   const [name, setName] = useState("");
   const [mobile, setMobile] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
@@ -16,7 +19,27 @@ function Register() {
       return;
     }
 
-    alert("Registration feature will be connected with Spring Boot soon.");
+    try {
+      await axios.post("http://3.110.121.36:8081/api/users/register", {
+        name: name,
+        phone: mobile,
+        email: email,
+        password: password,
+      });
+
+      alert("Registration Successful!");
+
+      navigate("/login");
+
+    } catch (error) {
+
+      if (error.response) {
+        alert(error.response.data.message || "Registration Failed");
+      } else {
+        alert("Cannot connect to Spring Boot Server.");
+      }
+
+    }
   };
 
   return (
@@ -46,56 +69,44 @@ function Register() {
 
         <input
           type="text"
-          placeholder="Enter Full Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          placeholder="Enter Full Name"
           required
           style={{
             width: "100%",
             padding: "12px",
-            marginTop: "8px",
-            marginBottom: "18px",
-            border: "1px solid #ccc",
-            borderRadius: "5px",
-            boxSizing: "border-box"
+            margin: "10px 0 20px"
           }}
         />
 
         <label>Mobile Number</label>
 
         <input
-          type="tel"
-          placeholder="Enter Mobile Number"
+          type="text"
           value={mobile}
           onChange={(e) => setMobile(e.target.value)}
+          placeholder="Enter Mobile Number"
           required
           style={{
             width: "100%",
             padding: "12px",
-            marginTop: "8px",
-            marginBottom: "18px",
-            border: "1px solid #ccc",
-            borderRadius: "5px",
-            boxSizing: "border-box"
+            margin: "10px 0 20px"
           }}
         />
 
-        <label>Email Address</label>
+        <label>Email</label>
 
         <input
           type="email"
-          placeholder="Enter Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          placeholder="Enter Email"
           required
           style={{
             width: "100%",
             padding: "12px",
-            marginTop: "8px",
-            marginBottom: "18px",
-            border: "1px solid #ccc",
-            borderRadius: "5px",
-            boxSizing: "border-box"
+            margin: "10px 0 20px"
           }}
         />
 
@@ -103,18 +114,14 @@ function Register() {
 
         <input
           type="password"
-          placeholder="Enter Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          placeholder="Enter Password"
           required
           style={{
             width: "100%",
             padding: "12px",
-            marginTop: "8px",
-            marginBottom: "18px",
-            border: "1px solid #ccc",
-            borderRadius: "5px",
-            boxSizing: "border-box"
+            margin: "10px 0 20px"
           }}
         />
 
@@ -122,18 +129,14 @@ function Register() {
 
         <input
           type="password"
-          placeholder="Confirm Password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
+          placeholder="Confirm Password"
           required
           style={{
             width: "100%",
             padding: "12px",
-            marginTop: "8px",
-            marginBottom: "25px",
-            border: "1px solid #ccc",
-            borderRadius: "5px",
-            boxSizing: "border-box"
+            margin: "10px 0 20px"
           }}
         />
 
@@ -143,9 +146,8 @@ function Register() {
             width: "100%",
             padding: "14px",
             background: "#d32f2f",
-            color: "#ffffff",
+            color: "white",
             border: "none",
-            borderRadius: "5px",
             fontSize: "18px",
             cursor: "pointer"
           }}
@@ -155,23 +157,9 @@ function Register() {
 
       </form>
 
-      <p
-        style={{
-          textAlign: "center",
-          marginTop: "25px"
-        }}
-      >
+      <p style={{ textAlign: "center", marginTop: "20px" }}>
         Already have an account?{" "}
-        <Link
-          to="/login"
-          style={{
-            color: "#d32f2f",
-            fontWeight: "bold",
-            textDecoration: "none"
-          }}
-        >
-          Login Here
-        </Link>
+        <Link to="/login">Login Here</Link>
       </p>
     </div>
   );

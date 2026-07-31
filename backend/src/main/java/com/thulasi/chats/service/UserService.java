@@ -27,4 +27,19 @@ public class UserService {
     public User getUser(Long id) {
         return userRepository.findById(id).orElse(null);
     }
+
+    public User login(String email, String password) {
+
+        User user = userRepository.findByEmail(email).orElse(null);
+
+        if (user == null) {
+            return null;
+        }
+
+        if (!user.getPassword().equals(password)) {
+            return null;
+        }
+
+        return user;
+    }
 }

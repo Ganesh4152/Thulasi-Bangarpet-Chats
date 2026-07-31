@@ -2,8 +2,6 @@ package com.thulasi.chats.entity;
 
 import jakarta.persistence.*;
 
-import java.math.BigDecimal;
-
 @Entity
 @Table(name = "menu_items")
 public class MenuItem {
@@ -14,13 +12,14 @@ public class MenuItem {
 
     private String name;
 
-    private String description;
-
-    private BigDecimal price;
+    private Double price;
 
     private String image;
 
-    private Boolean available = true;
+    @Column(length = 1000)
+    private String description;
+
+    private Boolean available;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -28,6 +27,10 @@ public class MenuItem {
 
     public MenuItem() {
     }
+
+    // ======================
+    // ID
+    // ======================
 
     public Long getId() {
         return id;
@@ -37,6 +40,10 @@ public class MenuItem {
         this.id = id;
     }
 
+    // ======================
+    // Name
+    // ======================
+
     public String getName() {
         return name;
     }
@@ -45,21 +52,21 @@ public class MenuItem {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
-    }
+    // ======================
+    // Price
+    // ======================
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public BigDecimal getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
+
+    // ======================
+    // Image
+    // ======================
 
     public String getImage() {
         return image;
@@ -69,6 +76,22 @@ public class MenuItem {
         this.image = image;
     }
 
+    // ======================
+    // Description
+    // ======================
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    // ======================
+    // Available
+    // ======================
+
     public Boolean getAvailable() {
         return available;
     }
@@ -76,6 +99,10 @@ public class MenuItem {
     public void setAvailable(Boolean available) {
         this.available = available;
     }
+
+    // ======================
+    // Category
+    // ======================
 
     public Category getCategory() {
         return category;

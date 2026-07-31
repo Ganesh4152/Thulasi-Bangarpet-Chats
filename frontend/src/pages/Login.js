@@ -1,14 +1,39 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 function Login() {
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    alert("Login feature will be connected with Spring Boot soon.");
+    try {
+      const response = await axios.post(
+        "http://3.110.121.36:8081/api/users/login",
+        {
+          email,
+          password,
+        }
+      );
+
+      alert("Login Successful!");
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify(response.data)
+      );
+
+window.location.href = "/";
+    } catch (error) {
+      if (error.response) {
+        alert(error.response.data.message || "Invalid Email or Password");
+      } else {
+        alert("Cannot connect to Spring Boot Server.");
+      }
+    }
   };
 
   return (
@@ -17,39 +42,34 @@ function Login() {
         maxWidth: "450px",
         margin: "50px auto",
         padding: "30px",
-        background: "#ffffff",
+        background: "#fff",
         borderRadius: "10px",
-        boxShadow: "0 0 10px rgba(0,0,0,0.2)"
+        boxShadow: "0 0 10px rgba(0,0,0,.2)"
       }}
     >
       <h2
         style={{
           textAlign: "center",
-          color: "#d32f2f",
-          marginBottom: "25px"
+          color: "#d32f2f"
         }}
       >
         Customer Login
       </h2>
 
       <form onSubmit={handleLogin}>
+
         <label>Email Address</label>
 
         <input
           type="email"
-          placeholder="Enter your email"
+          placeholder="Enter Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
           style={{
             width: "100%",
             padding: "12px",
-            marginTop: "8px",
-            marginBottom: "20px",
-            border: "1px solid #ccc",
-            borderRadius: "5px",
-            fontSize: "16px",
-            boxSizing: "border-box"
+            margin: "10px 0 20px"
           }}
         />
 
@@ -57,19 +77,14 @@ function Login() {
 
         <input
           type="password"
-          placeholder="Enter your password"
+          placeholder="Enter Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
           style={{
             width: "100%",
             padding: "12px",
-            marginTop: "8px",
-            marginBottom: "20px",
-            border: "1px solid #ccc",
-            borderRadius: "5px",
-            fontSize: "16px",
-            boxSizing: "border-box"
+            margin: "10px 0 20px"
           }}
         />
 
@@ -77,35 +92,22 @@ function Login() {
           type="submit"
           style={{
             width: "100%",
-            padding: "14px",
+            padding: "12px",
             background: "#d32f2f",
-            color: "#fff",
+            color: "white",
             border: "none",
-            borderRadius: "5px",
             fontSize: "18px",
             cursor: "pointer"
           }}
         >
           Login
         </button>
+
       </form>
 
-      <p
-        style={{
-          textAlign: "center",
-          marginTop: "25px",
-          fontSize: "16px"
-        }}
-      >
+      <p style={{ textAlign: "center", marginTop: "20px" }}>
         New Customer?{" "}
-        <Link
-          to="/register"
-          style={{
-            color: "#d32f2f",
-            fontWeight: "bold",
-            textDecoration: "none"
-          }}
-        >
+        <Link to="/register">
           Register Here
         </Link>
       </p>

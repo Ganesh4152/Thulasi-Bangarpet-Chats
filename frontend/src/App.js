@@ -5,7 +5,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
 import "./styles/Home.css";
-
+import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/Home";
 import Menu from "./pages/Menu";
 import Cart from "./pages/Cart";
@@ -16,7 +16,7 @@ import Checkout from "./pages/Checkout";
 import Admin from "./pages/Admin";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
-
+import Logout from "./components/Logout";
 function App() {
   return (
     <BrowserRouter>
@@ -34,6 +34,33 @@ function App() {
         <Route path="/admin" element={<Admin />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="*" element={<NotFound />} />
+	<Route path="/logout" element={<Logout />} />
+	<Route
+  path="/cart"
+  element={
+    <ProtectedRoute>
+      <Cart />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/checkout"
+  element={
+    <ProtectedRoute>
+      <Checkout />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/orders"
+  element={
+    <ProtectedRoute>
+      <Orders />
+    </ProtectedRoute>
+  }
+/>
       </Routes>
 
       <Footer />

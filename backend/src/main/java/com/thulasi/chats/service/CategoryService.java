@@ -20,7 +20,26 @@ public class CategoryService {
         return repository.findAll();
     }
 
-    public Category save(Category category) {
+    public Category getCategory(Long id) {
+        return repository.findById(id).orElse(null);
+    }
+
+    public Category saveCategory(Category category) {
         return repository.save(category);
     }
+
+    public Category updateCategory(Long id, Category category) {
+
+        category.setId(id);
+
+        return repository.save(category);
+
+    }
+
+    public void deleteCategory(Long id) {
+
+        repository.deleteById(id);
+
+    }
+
 }

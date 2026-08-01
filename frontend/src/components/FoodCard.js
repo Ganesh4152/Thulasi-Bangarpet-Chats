@@ -6,24 +6,25 @@ function FoodCard({ item }) {
 
   const { addToCart } = useCart();
 
-  const imageUrl =
-    item.image.startsWith("http")
-      ? item.image
-      : `http://13.207.126.116:8081${item.image}`;
-
   return (
+
     <div className="col-md-4 mb-4">
 
       <div className="card shadow h-100">
 
         <img
-          src={imageUrl}
+
+          src={`http://13.207.126.116:8081${item.image}`}
+
           alt={item.name}
+
           className="card-img-top"
+
           style={{
             height: "220px",
             objectFit: "cover"
           }}
+
         />
 
         <div className="card-body">
@@ -34,18 +35,30 @@ function FoodCard({ item }) {
 
           <h4>₹ {item.price}</h4>
 
+          <p>⭐ {item.rating}</p>
+
           <Link
+
             to={`/food/${item.id}`}
+
             className="btn btn-primary w-100 mb-2"
+
           >
+
             View Details
+
           </Link>
 
           <button
+
             className="btn btn-success w-100"
+
             onClick={() => addToCart(item)}
+
           >
+
             Add To Cart
+
           </button>
 
         </div>
@@ -53,7 +66,9 @@ function FoodCard({ item }) {
       </div>
 
     </div>
+
   );
+
 }
 
 export default FoodCard;

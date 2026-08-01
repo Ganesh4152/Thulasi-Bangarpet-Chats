@@ -5,12 +5,22 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./css/style.css";
 
 import App from "./App";
+
+import { BrowserRouter } from "react-router-dom";
 import { CartProvider } from "./context/CartContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
-  <CartProvider>
-    <App />
-  </CartProvider>
+
+  <BrowserRouter>
+
+    <CartProvider>
+
+      <App />
+
+    </CartProvider>
+
+  </BrowserRouter>
+
 );

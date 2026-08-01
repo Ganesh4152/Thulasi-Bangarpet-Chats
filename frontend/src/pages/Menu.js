@@ -1,31 +1,78 @@
 import React, { useEffect, useState } from "react";
 import api from "../services/api";
+import FoodCard from "../components/FoodCard";
 
 function Menu() {
 
-    const [menu, setMenu] = useState([]);
+  const [keyword, setKeyword] = useState("");
+  const [menuItems, setMenuItems] = useState([]);
 
-    useEffect(() => {
-        api.get("/menu")
-            .then((response) => setMenu(response.data))
-            .catch((error) => console.error(error));
-    }, []);
+  useEffect(() => {
 
-    return (
-        <div className="container">
-            <h2>Thulasi Bangarpet Chats</h2>
+    const loadMenu = async () => {
 
-            {menu.map((item) => (
-                <div key={item.id}>
-                    <h3>{item.name}</h3>
+      try {
 
-                    <p>{item.description}</p>
+        let response;
 
-                    <strong>₹ {item.price}</strong>
-                </div>
-            ))}
-        </div>
-    );
+        if (keyword.trim() === "") {
+
+          response = await api.get("/menu");
+
+        } else {
+
+          response = await api.get(
+            `/menu/search?keyword=${keyword}`
+          );
+
+        }
+
+        setMenuItems(response.data);
+
+      } catch (err) {
+
+        console.log(err);
+
+      }
+
+    };
+
+    loadMenu();
+
+  }, [keyword]);
+
+  return (
+
+    <div className="container mt-4">
+
+      <h2 className="text-center mb-4">
+        Our Menu
+      </h2>
+
+      <input
+        className="form-control mb-4"
+        placeholder="Search food..."
+        value={keyword}
+        onChange={(e) => setKeyword(e.target.value)}
+      />
+
+      <div className="row">
+
+        {menuItems.map(item => (
+
+          <FoodCard
+            key={item.id}
+            item={item}
+          />
+
+        ))}
+
+      </div>
+
+    </div>
+
+  );
+
 }
 
 export default Menu;

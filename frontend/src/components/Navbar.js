@@ -8,6 +8,7 @@ function Navbar() {
   );
 
   useEffect(() => {
+
     const handleStorage = () => {
       setUser(JSON.parse(localStorage.getItem("user")));
     };
@@ -17,24 +18,27 @@ function Navbar() {
     return () => {
       window.removeEventListener("storage", handleStorage);
     };
+
   }, []);
 
-const logout = () => {
-  localStorage.removeItem("user");
+  const logout = () => {
 
-  window.location.href = "/login";
-};
+    localStorage.removeItem("user");
 
+    window.location.href = "/login";
 
-
+  };
 
   return (
+
     <nav className="navbar">
+
       <div className="logo">
         <h2>🍽️ Thulasi Bangarpet Chats</h2>
       </div>
 
       <ul className="nav-links">
+
         <li>
           <Link to="/">Home</Link>
         </li>
@@ -51,9 +55,17 @@ const logout = () => {
           <Link to="/cart">Cart 🛒</Link>
         </li>
 
+        {/* Admin Menu */}
+        <li>
+          <Link to="/admin">👨‍🍳 Admin</Link>
+        </li>
+
         {user ? (
           <>
-            <li>👋 {user.name}</li>
+
+            <li>
+              👋 {user.name}
+            </li>
 
             <li>
               <button
@@ -64,15 +76,18 @@ const logout = () => {
                   border: "none",
                   cursor: "pointer",
                   fontWeight: "bold",
-                  fontSize: "18px",
+                  fontSize: "18px"
                 }}
               >
                 Logout
               </button>
             </li>
+
           </>
         ) : (
+
           <>
+
             <li>
               <Link to="/login">Login</Link>
             </li>
@@ -80,11 +95,17 @@ const logout = () => {
             <li>
               <Link to="/register">Register</Link>
             </li>
+
           </>
+
         )}
+
       </ul>
+
     </nav>
+
   );
+
 }
 
 export default Navbar;

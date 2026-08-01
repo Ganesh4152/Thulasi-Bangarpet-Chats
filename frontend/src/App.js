@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-
+import AdminOrders from "./pages/AdminOrders";
 import Home from "./pages/Home";
 import Menu from "./pages/Menu";
 import Cart from "./pages/Cart";
@@ -28,6 +28,7 @@ function App() {
       <Routes>
 
         <Route path="/" element={<Home />} />
+	<Route path="/admin/orders" element={<AdminOrders />} />
 
         <Route path="/menu" element={<Menu />} />
 

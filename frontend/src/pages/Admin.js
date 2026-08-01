@@ -14,7 +14,7 @@ function Admin() {
   const [foods, setFoods] = useState([]);
   const [categories, setCategories] = useState([]);
 
-  const API = "http://localhost:8081/api";
+const API = "http://13.207.126.116:8081/api";
 
   useEffect(() => {
     loadFoods();

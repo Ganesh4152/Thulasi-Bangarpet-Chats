@@ -17,24 +17,33 @@ export function CartProvider({ children }) {
     if (existing) {
 
       setCartItems(
+
         cartItems.map(item =>
+
           item.id === food.id
+
             ? {
                 ...item,
                 quantity: item.quantity + 1
               }
+
             : item
+
         )
+
       );
 
     } else {
 
       setCartItems([
+
         ...cartItems,
+
         {
           ...food,
           quantity: 1
         }
+
       ]);
 
     }
@@ -97,6 +106,12 @@ export function CartProvider({ children }) {
 
   };
 
+  const clearCart = () => {
+
+    setCartItems([]);
+
+  };
+
   return (
 
     <CartContext.Provider
@@ -111,7 +126,9 @@ export function CartProvider({ children }) {
 
         decreaseQty,
 
-        removeItem
+        removeItem,
+
+        clearCart
 
       }}
 

@@ -27,9 +27,41 @@ function Orders() {
 
   };
 
+  const updateStatus = async (id, status) => {
+
+    try {
+
+      const order = orders.find(o => o.id === id);
+
+      const updatedOrder = {
+
+        ...order,
+
+        status: status
+
+      };
+
+      await api.put(`/orders/${id}`, updatedOrder);
+
+      alert("Order Status Updated Successfully");
+
+      fetchOrders();
+
+    } catch (error) {
+
+      console.log(error);
+
+      alert("Unable to update order.");
+
+    }
+
+  };
+
   const deleteOrder = async (id) => {
 
-    if (!window.confirm("Delete this order?")) return;
+    if (!window.confirm("Delete this order?")) {
+      return;
+    }
 
     try {
 
@@ -97,11 +129,64 @@ function Orders() {
                     {order.items ? order.items : "-"}
                   </td>
 
-                  <td>{order.status}</td>
+                  <td>
 
-                  <td>₹ {order.totalAmount.toFixed(2)}</td>
+                    <select
+                      className="form-select"
+                      value={order.status}
+                      onChange={(e) => {
+
+                        const value = e.target.value;
+
+                        setOrders(
+
+                          orders.map(o =>
+
+                            o.id === order.id
+
+                              ? { ...o, status: value }
+
+                              : o
+
+                          )
+
+                        );
+
+                      }}
+                    >
+
+                      <option value="PLACED">
+                        PLACED
+                      </option>
+
+                      <option value="PREPARING">
+                        PREPARING
+                      </option>
+
+                      <option value="OUT FOR DELIVERY">
+                        OUT FOR DELIVERY
+                      </option>
+
+                      <option value="DELIVERED">
+                        DELIVERED
+                      </option>
+
+                    </select>
+
+                  </td>
 
                   <td>
+                    ₹ {order.totalAmount.toFixed(2)}
+                  </td>
+
+                  <td>
+
+                    <button
+                      className="btn btn-primary btn-sm me-2"
+                      onClick={() => updateStatus(order.id, order.status)}
+                    >
+                      Update
+                    </button>
 
                     <button
                       className="btn btn-danger btn-sm"

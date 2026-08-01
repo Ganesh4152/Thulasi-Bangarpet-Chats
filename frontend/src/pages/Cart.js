@@ -1,5 +1,6 @@
 import React from "react";
 import { useCart } from "../context/CartContext";
+import { Link } from "react-router-dom";
 
 function Cart() {
 
@@ -146,6 +147,12 @@ function Cart() {
           <h4>Delivery : ₹ {delivery.toFixed(2)}</h4>
 
           <h3>Total : ₹ {total.toFixed(2)}</h3>
+<Link
+  to="/checkout"
+  className="btn btn-primary btn-lg mt-3"
+>
+  Proceed to Checkout
+</Link>
 
         </>
 

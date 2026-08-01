@@ -12,7 +12,7 @@ function Login() {
 
     try {
       const response = await axios.post(
-        "http://3.110.121.36:8081/api/users/login",
+        "http://13.207.126.116:8081/api/users/login",
         {
           email,
           password,

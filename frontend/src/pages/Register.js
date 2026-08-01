@@ -20,7 +20,7 @@ function Register() {
     }
 
     try {
-      await axios.post("http://3.110.121.36:8081/api/users/register", {
+      await axios.post("http://13.207.126.116:8081/api/users/register", {
         name: name,
         phone: mobile,
         email: email,

@@ -14,6 +14,9 @@ public class Order {
 
     private String status;
 
+    @Column(length = 1000)
+    private String items;
+
     public Order() {
     }
 
@@ -39,5 +42,13 @@ public class Order {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getItems() {
+        return items;
+    }
+
+    public void setItems(String items) {
+        this.items = items;
     }
 }

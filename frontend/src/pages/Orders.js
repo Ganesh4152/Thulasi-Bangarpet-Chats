@@ -10,20 +10,26 @@ function Orders() {
   }, []);
 
   const fetchOrders = async () => {
+
     try {
+
       const response = await api.get("/orders");
+
       setOrders(response.data);
+
     } catch (error) {
+
       console.log(error);
+
       alert("Unable to load orders.");
+
     }
+
   };
 
   const deleteOrder = async (id) => {
 
-    if (!window.confirm("Delete this order?")) {
-      return;
-    }
+    if (!window.confirm("Delete this order?")) return;
 
     try {
 
@@ -65,6 +71,8 @@ function Orders() {
 
               <th>Order ID</th>
 
+              <th>Items</th>
+
               <th>Status</th>
 
               <th>Total Amount</th>
@@ -84,6 +92,10 @@ function Orders() {
                 <tr key={order.id}>
 
                   <td>{order.id}</td>
+
+                  <td>
+                    {order.items ? order.items : "-"}
+                  </td>
 
                   <td>{order.status}</td>
 

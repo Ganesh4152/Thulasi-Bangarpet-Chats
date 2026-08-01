@@ -24,7 +24,13 @@ function Checkout() {
 
     try {
 
+      const itemNames = cartItems
+        .map(item => `${item.name} x ${item.quantity}`)
+        .join(", ");
+
       const order = {
+
+        items: itemNames,
 
         totalAmount: total,
 
@@ -62,7 +68,7 @@ function Checkout() {
 
       <h2>Checkout</h2>
 
-      <table className="table">
+      <table className="table table-bordered">
 
         <thead>
 
@@ -90,11 +96,7 @@ function Checkout() {
 
                 <td>{item.quantity}</td>
 
-                <td>
-
-                  ₹ {item.price * item.quantity}
-
-                </td>
+                <td>₹ {(item.price * item.quantity).toFixed(2)}</td>
 
               </tr>
 
@@ -108,40 +110,19 @@ function Checkout() {
 
       <hr />
 
-      <h4>
+      <h4>Subtotal : ₹ {subtotal.toFixed(2)}</h4>
 
-        Subtotal : ₹ {subtotal.toFixed(2)}
+      <h4>GST (5%) : ₹ {gst.toFixed(2)}</h4>
 
-      </h4>
+      <h4>Delivery : ₹ {delivery.toFixed(2)}</h4>
 
-      <h4>
-
-        GST : ₹ {gst.toFixed(2)}
-
-      </h4>
-
-      <h4>
-
-        Delivery : ₹ {delivery.toFixed(2)}
-
-      </h4>
-
-      <h3>
-
-        Total : ₹ {total.toFixed(2)}
-
-      </h3>
+      <h3>Total : ₹ {total.toFixed(2)}</h3>
 
       <button
-
         className="btn btn-success btn-lg mt-3"
-
         onClick={placeOrder}
-
       >
-
         Place Order
-
       </button>
 
     </div>

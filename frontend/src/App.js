@@ -17,7 +17,7 @@ import NotFound from "./pages/NotFound";
 import Logout from "./components/Logout";
 import FoodDetails from "./pages/FoodDetails";
 import ProtectedRoute from "./components/ProtectedRoute";
-
+import AdminProtectedRoute from "./components/AdminProtectedRoute";
 import "./styles/Home.css";
 
 function App() {
@@ -28,7 +28,6 @@ function App() {
       <Routes>
 
         <Route path="/" element={<Home />} />
-	<Route path="/admin/orders" element={<AdminOrders />} />
 
         <Route path="/menu" element={<Menu />} />
 
@@ -65,8 +64,24 @@ function App() {
 
         <Route path="/register" element={<Register />} />
 
-        <Route path="/admin" element={<Admin />} />
+<Route
+  path="/admin/orders"
+  element={
+    <AdminProtectedRoute>
+      <AdminOrders />
+    </AdminProtectedRoute>
+  }
+/>
 
+
+<Route
+  path="/admin"
+  element={
+    <AdminProtectedRoute>
+      <Admin />
+    </AdminProtectedRoute>
+  }
+/>
         <Route path="/contact" element={<Contact />} />
 
         <Route path="/logout" element={<Logout />} />

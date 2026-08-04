@@ -1,29 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 function Navbar() {
 
-  const [user, setUser] = useState(
-    JSON.parse(localStorage.getItem("user"))
-  );
+  const location = useLocation();
+
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
 
-    const handleStorage = () => {
-      setUser(JSON.parse(localStorage.getItem("user")));
-    };
+    const loggedUser = JSON.parse(localStorage.getItem("user"));
 
-    window.addEventListener("storage", handleStorage);
+    setUser(loggedUser);
 
-    return () => {
-      window.removeEventListener("storage", handleStorage);
-    };
-
-  }, []);
+  }, [location]);
 
   const logout = () => {
 
     localStorage.removeItem("user");
+
+    setUser(null);
 
     window.location.href = "/login";
 
@@ -34,7 +30,9 @@ function Navbar() {
     <nav className="navbar">
 
       <div className="logo">
+
         <h2>🍽️ Thulasi Bangarpet Chats</h2>
+
       </div>
 
       <ul className="nav-links">
@@ -55,19 +53,26 @@ function Navbar() {
           <Link to="/cart">Cart 🛒</Link>
         </li>
 
-        {/* Admin Menu */}
-        <li>
-          <Link to="/admin">👨‍🍳 Admin</Link>
-        </li>
+        {user && user.role === "ADMIN" && (
+
+          <li>
+            <Link to="/admin">👨‍🍳 Admin</Link>
+          </li>
+
+        )}
 
         {user ? (
+
           <>
 
             <li>
+
               👋 {user.name}
+
             </li>
 
             <li>
+
               <button
                 onClick={logout}
                 style={{
@@ -79,11 +84,15 @@ function Navbar() {
                   fontSize: "18px"
                 }}
               >
+
                 Logout
+
               </button>
+
             </li>
 
           </>
+
         ) : (
 
           <>

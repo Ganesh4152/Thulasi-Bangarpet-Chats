@@ -9,13 +9,13 @@ import FoodForm from "../components/FoodForm";
 import FoodTable from "../components/FoodTable";
 import CategoryForm from "../components/CategoryForm";
 
+const API = "http://13.207.126.116:8081/api";
+
 function Admin() {
 
   const [foods, setFoods] = useState([]);
   const [editingFood, setEditingFood] = useState(null);
   const [categories, setCategories] = useState([]);
-
-const API = "http://13.207.126.116:8081/api";
 
   useEffect(() => {
     loadFoods();
@@ -23,28 +23,62 @@ const API = "http://13.207.126.116:8081/api";
   }, []);
 
   const loadFoods = async () => {
-    const res = await axios.get(`${API}/menu`);
-    setFoods(res.data);
+    try {
+      const res = await axios.get(`${API}/menu`);
+      setFoods(res.data);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const loadCategories = async () => {
-    const res = await axios.get(`${API}/categories`);
-    setCategories(res.data);
+    try {
+      const res = await axios.get(`${API}/categories`);
+      setCategories(res.data);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const addFood = async (food) => {
-    await axios.post(`${API}/menu`, food);
-    loadFoods();
+    try {
+      await axios.post(`${API}/menu`, food);
+      await loadFoods();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const updateFood = async (food) => {
+    try {
+      await axios.put(`${API}/menu/${food.id}`, food);
+      await loadFoods();
+      setEditingFood(null);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const deleteFood = async (id) => {
-    await axios.delete(`${API}/menu/${id}`);
-    loadFoods();
+    try {
+      await axios.delete(`${API}/menu/${id}`);
+      await loadFoods();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const addCategory = async (category) => {
-    await axios.post(`${API}/categories`, category);
-    loadCategories();
+    try {
+      await axios.post(`${API}/categories`, category);
+      await loadCategories();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const cancelEdit = () => {
+    setEditingFood(null);
   };
 
   return (
@@ -59,7 +93,7 @@ const API = "http://13.207.126.116:8081/api";
           style={{
             flex: 1,
             padding: "30px",
-            background: "#f4f4f4",
+            background: "#f4f4f4"
           }}
         >
 
@@ -73,9 +107,9 @@ const API = "http://13.207.126.116:8081/api";
 
           <FoodForm
             addFood={addFood}
-	editingFood={editingFood}
-    setEditingFood={setEditingFood}
-    loadFoods={loadFoods}
+            updateFood={updateFood}
+            editingFood={editingFood}
+            cancelEdit={cancelEdit}
           />
 
           <br />
@@ -83,7 +117,7 @@ const API = "http://13.207.126.116:8081/api";
           <FoodTable
             foods={foods}
             deleteFood={deleteFood}
-	   setEditingFood={setEditingFood}
+            setEditingFood={setEditingFood}
           />
 
           <br />
@@ -101,6 +135,7 @@ const API = "http://13.207.126.116:8081/api";
         </div>
 
       </div>
+
     </>
   );
 }

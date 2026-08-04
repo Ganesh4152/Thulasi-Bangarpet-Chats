@@ -2,45 +2,69 @@ package com.thulasi.chats.controller;
 
 import com.thulasi.chats.entity.MenuItem;
 import com.thulasi.chats.service.MenuService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/menu")
+
 @CrossOrigin(origins = "*")
+
 public class MenuController {
 
-    private final MenuService menuService;
-
-    public MenuController(MenuService menuService) {
-        this.menuService = menuService;
-    }
+    @Autowired
+    private MenuService menuService;
 
     @GetMapping
-    public List<MenuItem> getAllMenuItems() {
-        return menuService.getAllMenuItems();
+    public List<MenuItem> getAllFoods() {
+
+        return menuService.getAllFoods();
+
     }
 
     @GetMapping("/{id}")
-    public Optional<MenuItem> getMenuItem(@PathVariable Long id) {
-        return menuService.getMenuItemById(id);
+    public MenuItem getFood(@PathVariable Long id) {
+
+        return menuService.getFood(id);
+
     }
 
     @PostMapping
-    public MenuItem createMenuItem(@RequestBody MenuItem menuItem) {
-        return menuService.createMenuItem(menuItem);
+    public MenuItem addFood(
+
+            @RequestBody MenuItem item
+
+    ) {
+
+        return menuService.saveFood(item);
+
     }
 
     @PutMapping("/{id}")
-    public MenuItem updateMenuItem(@PathVariable Long id,
-                                   @RequestBody MenuItem menuItem) {
-        return menuService.updateMenuItem(id, menuItem);
+    public MenuItem updateFood(
+
+            @PathVariable Long id,
+
+            @RequestBody MenuItem item
+
+    ) {
+
+        return menuService.updateFood(id, item);
+
     }
 
     @DeleteMapping("/{id}")
-    public void deleteMenuItem(@PathVariable Long id) {
-        menuService.deleteMenuItem(id);
+    public void deleteFood(
+
+            @PathVariable Long id
+
+    ) {
+
+        menuService.deleteFood(id);
+
     }
+
 }

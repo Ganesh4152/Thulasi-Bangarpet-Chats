@@ -1,6 +1,6 @@
 import React from "react";
 
-function FoodTable({ foods, deleteFood }) {
+function FoodTable({ foods, deleteFood, setEditingFood }) {
   return (
     <div>
       <h2>Food Items</h2>
@@ -32,6 +32,14 @@ function FoodTable({ foods, deleteFood }) {
               </td>
 
               <td>
+<button
+className="btn btn-warning me-2"
+onClick={() => setEditingFood(food)}
+>
+Edit
+</button>
+
+
                 <button
                   onClick={() => deleteFood(food.id)}
                 >

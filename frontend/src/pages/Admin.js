@@ -12,6 +12,7 @@ import CategoryForm from "../components/CategoryForm";
 function Admin() {
 
   const [foods, setFoods] = useState([]);
+  const [editingFood, setEditingFood] = useState(null);
   const [categories, setCategories] = useState([]);
 
 const API = "http://13.207.126.116:8081/api";
@@ -72,6 +73,9 @@ const API = "http://13.207.126.116:8081/api";
 
           <FoodForm
             addFood={addFood}
+	editingFood={editingFood}
+    setEditingFood={setEditingFood}
+    loadFoods={loadFoods}
           />
 
           <br />
@@ -79,6 +83,7 @@ const API = "http://13.207.126.116:8081/api";
           <FoodTable
             foods={foods}
             deleteFood={deleteFood}
+	   setEditingFood={setEditingFood}
           />
 
           <br />

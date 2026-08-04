@@ -16,8 +16,8 @@ import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import Logout from "./components/Logout";
 import FoodDetails from "./pages/FoodDetails";
-import ProtectedRoute from "./components/ProtectedRoute";
 import AdminProtectedRoute from "./components/AdminProtectedRoute";
+import CustomerProtectedRoute from "./components/CustomerProtectedRoute";
 import "./styles/Home.css";
 
 function App() {
@@ -33,33 +33,35 @@ function App() {
 
         <Route path="/food/:id" element={<FoodDetails />} />
 
-        <Route
-          path="/cart"
-          element={
-            <ProtectedRoute>
-              <Cart />
-            </ProtectedRoute>
-          }
-        />
 
-        <Route
-          path="/checkout"
-          element={
-            <ProtectedRoute>
-              <Checkout />
-            </ProtectedRoute>
-          }
-        />
+<Route
+  path="/cart"
+  element={
+    <CustomerProtectedRoute>
+      <Cart />
+    </CustomerProtectedRoute>
+  }
+/>
 
-        <Route
-          path="/orders"
-          element={
-            <ProtectedRoute>
-              <Orders />
-            </ProtectedRoute>
-          }
-        />
 
+<Route
+  path="/checkout"
+  element={
+    <CustomerProtectedRoute>
+      <Checkout />
+    </CustomerProtectedRoute>
+  }
+/>
+
+
+<Route
+  path="/orders"
+  element={
+    <CustomerProtectedRoute>
+      <Orders />
+    </CustomerProtectedRoute>
+  }
+/>
         <Route path="/login" element={<Login />} />
 
         <Route path="/register" element={<Register />} />

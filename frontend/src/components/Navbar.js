@@ -9,7 +9,8 @@ function Navbar() {
 
   useEffect(() => {
 
-    const loggedUser = JSON.parse(localStorage.getItem("user"));
+    const loggedUser =
+      JSON.parse(localStorage.getItem("user"));
 
     setUser(loggedUser);
 
@@ -46,25 +47,51 @@ function Navbar() {
         </li>
 
         <li>
-          <Link to="/orders">Orders</Link>
+          <Link to="/contact">Contact</Link>
         </li>
 
-        <li>
-          <Link to="/cart">Cart 🛒</Link>
-        </li>
+        {!user && (
+          <>
+            <li>
+              <Link to="/login">Login</Link>
+            </li>
 
-        {user && user.role === "ADMIN" && (
-
-          <li>
-            <Link to="/admin">👨‍🍳 Admin</Link>
-          </li>
-
+            <li>
+              <Link to="/register">Register</Link>
+            </li>
+          </>
         )}
 
-        {user ? (
-
+        {user && user.role === "CUSTOMER" && (
           <>
+            <li>
+              <Link to="/cart">Cart 🛒</Link>
+            </li>
 
+            <li>
+              <Link to="/orders">Orders</Link>
+            </li>
+          </>
+        )}
+
+        {user && user.role === "ADMIN" && (
+          <>
+            <li>
+              <Link to="/admin">
+                Admin Dashboard
+              </Link>
+            </li>
+
+            <li>
+              <Link to="/admin/orders">
+                Admin Orders
+              </Link>
+            </li>
+          </>
+        )}
+
+        {user && (
+          <>
             <li>
 
               👋 {user.name}
@@ -74,15 +101,18 @@ function Navbar() {
             <li>
 
               <button
+
                 onClick={logout}
+
                 style={{
                   background: "transparent",
-                  color: "white",
                   border: "none",
+                  color: "white",
                   cursor: "pointer",
                   fontWeight: "bold",
                   fontSize: "18px"
                 }}
+
               >
 
                 Logout
@@ -90,23 +120,7 @@ function Navbar() {
               </button>
 
             </li>
-
           </>
-
-        ) : (
-
-          <>
-
-            <li>
-              <Link to="/login">Login</Link>
-            </li>
-
-            <li>
-              <Link to="/register">Register</Link>
-            </li>
-
-          </>
-
         )}
 
       </ul>

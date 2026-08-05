@@ -2,7 +2,6 @@ package com.thulasi.chats.service;
 
 import com.thulasi.chats.entity.Order;
 import com.thulasi.chats.repository.OrderRepository;
-
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,34 +18,25 @@ public class OrderService {
 
     /*
      * Admin
-     * View all orders
      */
 
     public List<Order> getAllOrders() {
-
         return orderRepository.findAll();
-
     }
 
     /*
-     * Customer
-     * View only own orders
+     * Customer Orders
      */
 
-    public List<Order> getOrdersByUser(Long userId) {
-
-        return orderRepository.findByUserId(userId);
-
-    }
-
+public List<Order> getOrdersByUser(Long userId) {
+    return orderRepository.findByUserId(userId);
+}
     /*
-     * Get one order
+     * Single Order
      */
 
     public Optional<Order> getOrder(Long id) {
-
         return orderRepository.findById(id);
-
     }
 
     /*
@@ -55,9 +45,24 @@ public class OrderService {
 
     public Order placeOrder(Order order) {
 
-        if (order.getStatus() == null || order.getStatus().isEmpty()) {
+        /*
+         * Default Order Status
+         */
+
+        if (order.getStatus() == null || order.getStatus().isBlank()) {
 
             order.setStatus("PLACED");
+
+        }
+
+        /*
+         * Default Payment Method
+         */
+
+        if (order.getPaymentMethod() == null
+                || order.getPaymentMethod().isBlank()) {
+
+            order.setPaymentMethod("COD");
 
         }
 

@@ -14,6 +14,8 @@ public class Order {
 
     private String status;
 
+    private String paymentMethod;
+
     @Column(length = 1000)
     private String items;
 
@@ -65,6 +67,22 @@ public class Order {
     public void setStatus(String status) {
         this.status = status;
     }
+
+// ==========================
+// Payment Method
+// ==========================
+
+public String getPaymentMethod() {
+    return paymentMethod;
+}
+
+public void setPaymentMethod(String paymentMethod) {
+    this.paymentMethod = paymentMethod;
+}
+
+
+
+
 
     // ==========================
     // Items

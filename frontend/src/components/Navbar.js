@@ -7,14 +7,52 @@ function Navbar() {
 
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
+useEffect(() => {
+
+
+  const loadUser = () => {
 
     const loggedUser =
       JSON.parse(localStorage.getItem("user"));
 
     setUser(loggedUser);
 
-  }, [location]);
+  };
+
+
+  loadUser();
+
+
+  window.addEventListener(
+    "login",
+    loadUser
+  );
+
+
+  window.addEventListener(
+    "storage",
+    loadUser
+  );
+
+
+  return ()=>{
+
+    window.removeEventListener(
+      "login",
+      loadUser
+    );
+
+
+    window.removeEventListener(
+      "storage",
+      loadUser
+    );
+
+  };
+
+
+},[location]);
+
 
   const logout = () => {
 

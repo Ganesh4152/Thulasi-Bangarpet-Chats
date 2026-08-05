@@ -8,31 +8,54 @@ function Login() {
 
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
+  const [email,setEmail] = useState("");
 
-  const [password, setPassword] = useState("");
+  const [password,setPassword] = useState("");
 
-  const handleLogin = async (e) => {
+
+  const handleLogin = async (e)=>{
 
     e.preventDefault();
 
+
     try {
+
 
       const response = await axios.post(
 
         `${API}/users/login`,
 
         {
-
           email,
-
           password
-
         }
 
       );
 
+
+      console.log("LOGIN RESPONSE");
+
+      console.log(response.data);
+
+
+
       const user = response.data;
+
+
+
+      // SAVE JWT TOKEN
+
+      localStorage.setItem(
+
+        "token",
+
+        user.token
+
+      );
+
+
+
+      // SAVE USER DETAILS
 
       localStorage.setItem(
 
@@ -42,25 +65,42 @@ function Login() {
 
       );
 
+
+
       alert("Login Successful!");
 
-      if (user.role === "ADMIN") {
+
+
+      if(user.role === "ADMIN"){
 
         navigate("/admin");
 
       }
 
-      else {
+      else{
 
         navigate("/");
 
       }
 
+
+      // refresh navbar state
+
+window.dispatchEvent(
+  new Event("login")
+);
+
+
     }
 
-    catch (error) {
+    catch(error){
 
-      if (error.response) {
+
+      console.log(error);
+
+
+      if(error.response){
+
 
         alert(
 
@@ -70,9 +110,11 @@ function Login() {
 
         );
 
+
       }
 
-      else {
+      else{
+
 
         alert(
 
@@ -80,152 +122,161 @@ function Login() {
 
         );
 
+
       }
+
 
     }
 
+
   };
 
-  return (
 
-    <div
 
-      style={{
+return (
 
-        maxWidth: "450px",
+<div
 
-        margin: "50px auto",
+style={{
 
-        padding: "30px",
+maxWidth:"450px",
 
-        background: "#fff",
+margin:"50px auto",
 
-        borderRadius: "10px",
+padding:"30px",
 
-        boxShadow: "0 0 10px rgba(0,0,0,.2)"
+background:"#fff",
 
-      }}
+borderRadius:"10px",
 
-    >
+boxShadow:"0 0 10px rgba(0,0,0,.2)"
 
-      <h2
+}}
 
-        style={{
+>
 
-          textAlign: "center",
 
-          color: "#d32f2f"
+<h2
 
-        }}
+style={{
 
-      >
+textAlign:"center",
 
-        Login
+color:"#d32f2f"
 
-      </h2>
+}}
 
-      <form onSubmit={handleLogin}>
+>
 
-        <label>
+Login
 
-          Email Address
+</h2>
 
-        </label>
 
-        <input
 
-          type="email"
+<form onSubmit={handleLogin}>
 
-          className="form-control mb-3"
 
-          placeholder="Enter Email"
+<label>
 
-          value={email}
+Email Address
 
-          onChange={(e) =>
+</label>
 
-            setEmail(
 
-              e.target.value
+<input
 
-            )
+type="email"
 
-          }
+className="form-control mb-3"
 
-          required
+placeholder="Enter Email"
 
-        />
+value={email}
 
-        <label>
+onChange={(e)=>setEmail(e.target.value)}
 
-          Password
+required
 
-        </label>
+/>
 
-        <input
 
-          type="password"
 
-          className="form-control mb-3"
+<label>
 
-          placeholder="Enter Password"
+Password
 
-          value={password}
+</label>
 
-          onChange={(e) =>
 
-            setPassword(
+<input
 
-              e.target.value
+type="password"
 
-            )
+className="form-control mb-3"
 
-          }
+placeholder="Enter Password"
 
-          required
+value={password}
 
-        />
+onChange={(e)=>setPassword(e.target.value)}
 
-        <button
+required
 
-          type="submit"
+/>
 
-          className="btn btn-danger w-100"
 
-        >
 
-          Login
+<button
 
-        </button>
+type="submit"
 
-      </form>
+className="btn btn-danger w-100"
 
-      <p
+>
 
-        style={{
+Login
 
-          textAlign: "center",
+</button>
 
-          marginTop: "20px"
 
-        }}
 
-      >
+</form>
 
-        New Customer?{" "}
 
-        <Link to="/register">
+<p
 
-          Register Here
+style={{
 
-        </Link>
+textAlign:"center",
 
-      </p>
+marginTop:"20px"
 
-    </div>
+}}
 
-  );
+>
+
+New Customer?
+
+{" "}
+
+<Link to="/register">
+
+Register Here
+
+</Link>
+
+
+</p>
+
+
+</div>
+
+
+);
+
 
 }
+
 
 export default Login;

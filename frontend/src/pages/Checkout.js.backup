@@ -4,48 +4,33 @@ import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import OrderService from "../services/OrderService";
 
-
 function Checkout() {
-
 
   const navigate = useNavigate();
 
-
-  const { cartItems, clearCart } = useCart();
-
+  const { cart, clearCart } = useCart();
 
   const user = JSON.parse(localStorage.getItem("user"));
-
 
   const [address, setAddress] = useState("");
 
   const [loading, setLoading] = useState(false);
 
-
-
   const getTotal = () => {
 
+    return cart.reduce(
 
-    return cartItems.reduce(
-
-      (total, item) =>
-
-        total + (item.price * item.quantity),
+      (total, item) => total + item.price * item.quantity,
 
       0
 
     );
 
-
   };
-
-
-
 
   const placeOrder = async () => {
 
-
-    if (!cartItems || cartItems.length === 0) {
+    if (cart.length === 0) {
 
       alert("Your cart is empty.");
 
@@ -53,9 +38,7 @@ function Checkout() {
 
     }
 
-
-
-    if (!address.trim()) {
+    if (address.trim() === "") {
 
       alert("Please enter delivery address.");
 
@@ -63,29 +46,11 @@ function Checkout() {
 
     }
 
-
-
-    if (!user) {
-
-      alert("Please login first.");
-
-      navigate("/login");
-
-      return;
-
-    }
-
-
-
     try {
-
 
       setLoading(true);
 
-
-
       const order = {
-
 
         user: {
 
@@ -93,143 +58,89 @@ function Checkout() {
 
         },
 
-
         deliveryAddress: address,
-
 
         totalAmount: getTotal(),
 
-
-
-        orderItems: cartItems.map(item => ({
-
+        orderItems: cart.map(item => ({
 
           menuItem: {
-
 
             id: item.id
 
           },
 
-
           quantity: item.quantity,
-
 
           price: item.price
 
-
         }))
-
 
       };
 
-
-
-      console.log("Sending Order:", order);
-
-
-
       await OrderService.placeOrder(order);
 
-
-
-      alert("Order placed successfully!");
-
-
+      alert("Order Placed Successfully!");
 
       clearCart();
 
-
-
       navigate("/orders");
-
-
 
     }
 
-    catch(error) {
-
+    catch (error) {
 
       console.log(error);
 
-
-      alert("Unable to place order");
-
+      alert("Unable to place order.");
 
     }
 
     finally {
 
-
       setLoading(false);
-
 
     }
 
-
   };
-
-
-
 
   return (
 
-
     <div className="container mt-4">
-
 
       <div className="row justify-content-center">
 
-
         <div className="col-md-8">
-
 
           <div className="card shadow">
 
-
             <div className="card-body">
 
-
-              <h2>
+              <h2 className="mb-4">
 
                 Checkout
 
               </h2>
 
-
-
-              <hr />
-
-
-
               <h4>
 
-                Customer Details
+                Customer
 
               </h4>
 
-
-
               <p>
 
-                <b>Name:</b> {user?.name}
+                <strong>Name :</strong> {user.name}
 
               </p>
 
-
-
               <p>
 
-                <b>Email:</b> {user?.email}
+                <strong>Email :</strong> {user.email}
 
               </p>
-
-
-
 
               <hr />
-
-
 
               <h4>
 
@@ -237,34 +148,19 @@ function Checkout() {
 
               </h4>
 
-
-
               <textarea
 
-
-                className="form-control mb-3"
-
+                className="form-control mb-4"
 
                 rows="4"
 
-
-                placeholder="Enter delivery address"
-
+                placeholder="Enter Delivery Address"
 
                 value={address}
 
-
-                onChange={(e)=>
-
-                  setAddress(e.target.value)
-
-                }
-
+                onChange={(e) => setAddress(e.target.value)}
 
               />
-
-
-
 
               <h4>
 
@@ -272,11 +168,7 @@ function Checkout() {
 
               </h4>
 
-
-
-
               <table className="table">
-
 
                 <thead>
 
@@ -292,99 +184,67 @@ function Checkout() {
 
                   </tr>
 
-
                 </thead>
-
-
 
                 <tbody>
 
+                  {
 
-                {
+                    cart.map(item => (
 
+                      <tr key={item.id}>
 
-                  cartItems.map(item => (
+                        <td>
 
+                          {item.name}
 
-                    <tr key={item.id}>
+                        </td>
 
+                        <td>
 
-                      <td>
+                          {item.quantity}
 
-                        {item.name}
+                        </td>
 
-                      </td>
+                        <td>
 
+                          ₹ {item.price}
 
+                        </td>
 
-                      <td>
+                        <td>
 
-                        {item.quantity}
+                          ₹ {item.price * item.quantity}
 
-                      </td>
+                        </td>
 
+                      </tr>
 
+                    ))
 
-                      <td>
-
-                        ₹{item.price}
-
-                      </td>
-
-
-
-                      <td>
-
-                        ₹{item.price * item.quantity}
-
-                      </td>
-
-
-                    </tr>
-
-
-                  ))
-
-
-                }
-
+                  }
 
                 </tbody>
 
-
               </table>
-
-
-
 
               <h3 className="text-end">
 
-
-                Total : ₹{getTotal()}
-
+                Grand Total : ₹ {getTotal()}
 
               </h3>
 
-
-
-
               <button
 
-
-                className="btn btn-success w-100"
-
+                className="btn btn-success w-100 mt-4"
 
                 disabled={loading}
 
-
                 onClick={placeOrder}
-
 
               >
 
-
                 {
-
 
                   loading
 
@@ -396,35 +256,22 @@ function Checkout() {
 
                   "Place Order"
 
-
                 }
-
-
 
               </button>
 
-
-
             </div>
-
 
           </div>
 
-
         </div>
-
 
       </div>
 
-
     </div>
-
 
   );
 
-
 }
-
-
 
 export default Checkout;

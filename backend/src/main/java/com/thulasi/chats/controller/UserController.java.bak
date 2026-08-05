@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.*;
 
-import com.thulasi.chats.dto.LoginResponse;
 import com.thulasi.chats.entity.User;
 import com.thulasi.chats.service.UserService;
 
@@ -16,39 +15,26 @@ public class UserController {
     private final UserService service;
 
     public UserController(UserService service) {
-
         this.service = service;
-
     }
 
     @GetMapping
     public List<User> getUsers() {
-
         return service.getAllUsers();
-
     }
 
     @PostMapping("/register")
-    public User register(
-            @RequestBody User user
-    ) {
+    public User register(@RequestBody User user) {
 
         user.setRole("CUSTOMER");
 
         return service.register(user);
-
     }
 
     @PostMapping("/login")
-    public LoginResponse login(
-            @RequestBody User user
-    ) {
+    public LoginResponse login(...) {
 
-        return service.login(
-                user.getEmail(),
-                user.getPassword()
-        );
+        return service.login(user.getEmail(), user.getPassword());
 
     }
-
 }

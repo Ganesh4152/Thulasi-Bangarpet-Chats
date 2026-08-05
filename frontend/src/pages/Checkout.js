@@ -14,6 +14,8 @@ function Checkout() {
 
   const [address, setAddress] = useState("");
 
+  const [paymentMethod, setPaymentMethod] = useState("COD");
+
   const [loading, setLoading] = useState(false);
 
   const getTotal = () => {
@@ -60,7 +62,10 @@ function Checkout() {
 
       setLoading(true);
 
-      // Build readable item list
+      /*
+       * Build readable item names
+       */
+
       const itemNames = cartItems
         .map(item => `${item.name} x ${item.quantity}`)
         .join(", ");
@@ -72,6 +77,8 @@ function Checkout() {
         },
 
         deliveryAddress: address,
+
+        paymentMethod: paymentMethod,
 
         items: itemNames,
 
@@ -94,8 +101,6 @@ function Checkout() {
         }))
 
       };
-
-      console.log("Sending Order");
 
       console.log(order);
 
@@ -173,6 +178,68 @@ function Checkout() {
 
               />
 
+              <hr />
+
+              <h4>Payment Method</h4>
+
+              <div className="form-check">
+
+                <input
+
+                  className="form-check-input"
+
+                  type="radio"
+
+                  id="cod"
+
+                  name="paymentMethod"
+
+                  value="COD"
+
+                  checked={paymentMethod === "COD"}
+
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+
+                />
+
+                <label className="form-check-label" htmlFor="cod">
+
+                  Cash on Delivery
+
+                </label>
+
+              </div>
+
+              <div className="form-check mb-4">
+
+                <input
+
+                  className="form-check-input"
+
+                  type="radio"
+
+                  id="online"
+
+                  name="paymentMethod"
+
+                  value="ONLINE"
+
+                  checked={paymentMethod === "ONLINE"}
+
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+
+                />
+
+                <label className="form-check-label" htmlFor="online">
+
+                  Online Payment
+
+                </label>
+
+              </div>
+
+              <hr />
+
               <h4>Order Summary</h4>
 
               <table className="table">
@@ -205,9 +272,9 @@ function Checkout() {
 
                         <td>{item.quantity}</td>
 
-                        <td>₹{item.price}</td>
+                        <td>₹ {item.price}</td>
 
-                        <td>₹{item.price * item.quantity}</td>
+                        <td>₹ {item.price * item.quantity}</td>
 
                       </tr>
 
@@ -221,7 +288,7 @@ function Checkout() {
 
               <h3 className="text-end">
 
-                Total : ₹{getTotal()}
+                Total : ₹ {getTotal()}
 
               </h3>
 

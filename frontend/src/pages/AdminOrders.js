@@ -6,9 +6,7 @@ function AdminOrders() {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-
     loadOrders();
-
   }, []);
 
   const loadOrders = async () => {
@@ -33,21 +31,15 @@ function AdminOrders() {
 
     try {
 
-      await api.put(
+      await api.put(`/orders/${order.id}`, {
 
-        `/orders/${order.id}`,
+        ...order,
 
-        {
+        status: status
 
-          ...order,
+      });
 
-          status: status
-
-        }
-
-      );
-
-      alert("Order Status Updated Successfully");
+      alert("Order updated successfully.");
 
       loadOrders();
 
@@ -63,7 +55,11 @@ function AdminOrders() {
 
   const deleteOrder = async (id) => {
 
-    if (!window.confirm("Delete this order?")) {
+    const confirmDelete = window.confirm(
+      "Delete this order permanently?"
+    );
+
+    if (!confirmDelete) {
 
       return;
 
@@ -73,7 +69,7 @@ function AdminOrders() {
 
       await api.delete(`/orders/${id}`);
 
-      alert("Order Deleted Successfully");
+      alert("Order deleted successfully.");
 
       loadOrders();
 
@@ -103,161 +99,172 @@ function AdminOrders() {
 
           <h4>No Orders Found</h4>
 
-          :
+        :
 
-          <table className="table table-bordered table-striped">
+        <table className="table table-bordered table-striped">
 
-            <thead className="table-dark">
+          <thead className="table-dark">
 
-              <tr>
+            <tr>
 
-                <th>Order ID</th>
+              <th>ID</th>
 
-                <th>Customer</th>
+              <th>Customer</th>
 
-                <th>Email</th>
+              <th>Email</th>
 
-                <th>Items</th>
+              <th>Items</th>
 
-                <th>Total</th>
+              <th>Payment</th>
 
-                <th>Status</th>
+              <th>Total</th>
 
-                <th>Update</th>
+              <th>Status</th>
 
-                <th>Delete</th>
+              <th>Update</th>
 
-              </tr>
+              <th>Delete</th>
 
-            </thead>
+            </tr>
 
-            <tbody>
+          </thead>
 
-              {
+          <tbody>
 
-                orders.map(order => (
+            {
 
-                  <tr key={order.id}>
+              orders.map(order => (
 
-                    <td>
+                <tr key={order.id}>
 
-                      {order.id}
+                  <td>
 
-                    </td>
+                    {order.id}
 
-                    <td>
+                  </td>
 
-                      {order.user?.name || "-"}
+                  <td>
 
-                    </td>
+                    {order.user?.name}
 
-                    <td>
+                  </td>
 
-                      {order.user?.email || "-"}
+                  <td>
 
-                    </td>
+                    {order.user?.email}
 
-                    <td>
+                  </td>
 
-                      {order.items}
+                  <td>
 
-                    </td>
+                    {order.items}
 
-                    <td>
+                  </td>
 
-                      ₹ {order.totalAmount.toFixed(2)}
+                  <td>
 
-                    </td>
+                    <span
+                      className={
+                        order.paymentMethod === "ONLINE"
+                          ? "badge bg-success"
+                          : "badge bg-warning text-dark"
+                      }
+                    >
 
-                    <td>
+                      {order.paymentMethod}
 
-                      <span className="badge bg-primary">
+                    </span>
 
-                        {order.status}
+                  </td>
 
-                      </span>
+                  <td>
 
-                    </td>
+                    ₹ {order.totalAmount.toFixed(2)}
 
-                    <td>
+                  </td>
 
-                      <select
+                  <td>
 
-                        className="form-select"
+                    <span className="badge bg-primary">
 
-                        value={order.status}
+                      {order.status}
 
-                        onChange={(e) =>
+                    </span>
 
-                          updateStatus(
+                  </td>
 
-                            order,
+                  <td>
 
-                            e.target.value
+                    <select
 
-                          )
+                      className="form-select"
 
-                        }
+                      value={order.status}
 
-                      >
+                      onChange={(e) =>
+                        updateStatus(
+                          order,
+                          e.target.value
+                        )
+                      }
 
-                        <option value="PLACED">
+                    >
 
-                          PLACED
+                      <option value="PLACED">
 
-                        </option>
+                        PLACED
 
-                        <option value="PREPARING">
+                      </option>
 
-                          PREPARING
+                      <option value="PREPARING">
 
-                        </option>
+                        PREPARING
 
-                        <option value="OUT FOR DELIVERY">
+                      </option>
 
-                          OUT FOR DELIVERY
+                      <option value="OUT FOR DELIVERY">
 
-                        </option>
+                        OUT FOR DELIVERY
 
-                        <option value="DELIVERED">
+                      </option>
 
-                          DELIVERED
+                      <option value="DELIVERED">
 
-                        </option>
+                        DELIVERED
 
-                      </select>
+                      </option>
 
-                    </td>
+                    </select>
 
-                    <td>
+                  </td>
 
-                      <button
+                  <td>
 
-                        className="btn btn-danger btn-sm"
+                    <button
 
-                        onClick={() =>
+                      className="btn btn-danger btn-sm"
 
-                          deleteOrder(order.id)
+                      onClick={() =>
+                        deleteOrder(order.id)
+                      }
 
-                        }
+                    >
 
-                      >
+                      Delete
 
-                        Delete
+                    </button>
 
-                      </button>
+                  </td>
 
-                    </td>
+                </tr>
 
-                  </tr>
+              ))
 
-                ))
+            }
 
-              }
+          </tbody>
 
-            </tbody>
-
-          </table>
+        </table>
 
       }
 

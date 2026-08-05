@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import OrderService from "../services/OrderService";
 
 function Orders() {
@@ -7,17 +7,11 @@ function Orders() {
 
   const user = JSON.parse(localStorage.getItem("user"));
 
-  useEffect(() => {
+  const loadOrders = useCallback(async () => {
 
-    if (user) {
-
-      loadOrders();
-
+    if (!user) {
+      return;
     }
-
-  }, []);
-
-  const loadOrders = async () => {
 
     try {
 
@@ -33,7 +27,13 @@ function Orders() {
 
     }
 
-  };
+  }, [user]);
+
+  useEffect(() => {
+
+    loadOrders();
+
+  }, [loadOrders]);
 
   const cancelOrder = async (orderId) => {
 
@@ -95,6 +95,8 @@ function Orders() {
 
                 <th>Items</th>
 
+                <th>Payment</th>
+
                 <th>Status</th>
 
                 <th>Total Amount</th>
@@ -122,6 +124,22 @@ function Orders() {
                     <td>
 
                       {order.items}
+
+                    </td>
+
+                    <td>
+
+                      <span
+                        className={
+                          order.paymentMethod === "ONLINE"
+                            ? "badge bg-success"
+                            : "badge bg-secondary"
+                        }
+                      >
+
+                        {order.paymentMethod || "COD"}
+
+                      </span>
 
                     </td>
 

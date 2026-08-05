@@ -17,8 +17,22 @@ public class Order {
     @Column(length = 1000)
     private String items;
 
+    /*
+     * Customer who placed the order
+     */
+
+    @ManyToOne(fetch = FetchType.EAGER)
+
+    @JoinColumn(name = "user_id")
+
+    private User user;
+
     public Order() {
     }
+
+    // ==========================
+    // ID
+    // ==========================
 
     public Long getId() {
         return id;
@@ -28,6 +42,10 @@ public class Order {
         this.id = id;
     }
 
+    // ==========================
+    // Total Amount
+    // ==========================
+
     public Double getTotalAmount() {
         return totalAmount;
     }
@@ -35,6 +53,10 @@ public class Order {
     public void setTotalAmount(Double totalAmount) {
         this.totalAmount = totalAmount;
     }
+
+    // ==========================
+    // Status
+    // ==========================
 
     public String getStatus() {
         return status;
@@ -44,6 +66,10 @@ public class Order {
         this.status = status;
     }
 
+    // ==========================
+    // Items
+    // ==========================
+
     public String getItems() {
         return items;
     }
@@ -51,4 +77,17 @@ public class Order {
     public void setItems(String items) {
         this.items = items;
     }
+
+    // ==========================
+    // User
+    // ==========================
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
 }

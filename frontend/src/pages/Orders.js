@@ -1,81 +1,67 @@
 import React, { useEffect, useState } from "react";
-import api from "../services/api";
+import OrderService from "../services/OrderService";
 
 function Orders() {
 
   const [orders, setOrders] = useState([]);
 
+  const user = JSON.parse(localStorage.getItem("user"));
+
   useEffect(() => {
-    fetchOrders();
+
+    if (user) {
+
+      loadOrders();
+
+    }
+
   }, []);
 
-  const fetchOrders = async () => {
+  const loadOrders = async () => {
 
     try {
 
-      const response = await api.get("/orders");
+      const data = await OrderService.getOrders(user.id);
 
-      setOrders(response.data);
+      setOrders(data);
 
     } catch (error) {
 
       console.log(error);
 
-      alert("Unable to load orders.");
+      alert("Unable to load your orders.");
 
     }
 
   };
 
-  const updateStatus = async (id, status) => {
+  const cancelOrder = async (orderId) => {
 
-    try {
+    const confirmDelete = window.confirm(
+      "Do you want to cancel this order?"
+    );
 
-      const order = orders.find(o => o.id === id);
+    if (!confirmDelete) {
 
-      const updatedOrder = {
-
-        ...order,
-
-        status: status
-
-      };
-
-      await api.put(`/orders/${id}`, updatedOrder);
-
-      alert("Order Status Updated Successfully");
-
-      fetchOrders();
-
-    } catch (error) {
-
-      console.log(error);
-
-      alert("Unable to update order.");
-
-    }
-
-  };
-
-  const deleteOrder = async (id) => {
-
-    if (!window.confirm("Delete this order?")) {
       return;
+
     }
 
     try {
 
-      await api.delete(`/orders/${id}`);
+      await OrderService.deleteOrder(orderId);
 
-      alert("Order Deleted Successfully");
+      alert("Order cancelled successfully.");
 
-      fetchOrders();
+      loadOrders();
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
       console.log(error);
 
-      alert("Unable to delete order.");
+      alert("Unable to cancel order.");
 
     }
 
@@ -85,127 +71,101 @@ function Orders() {
 
     <div className="container mt-4">
 
-      <h2 className="mb-4">My Orders</h2>
+      <h2 className="mb-4">
+
+        My Orders
+
+      </h2>
 
       {
 
         orders.length === 0 ?
 
-        <h4>No Orders Found</h4>
+          <h4>No Orders Found</h4>
 
-        :
+          :
 
-        <table className="table table-bordered table-striped">
+          <table className="table table-bordered table-striped">
 
-          <thead className="table-dark">
+            <thead className="table-dark">
 
-            <tr>
+              <tr>
 
-              <th>Order ID</th>
+                <th>Order ID</th>
 
-              <th>Items</th>
+                <th>Items</th>
 
-              <th>Status</th>
+                <th>Status</th>
 
-              <th>Total Amount</th>
+                <th>Total Amount</th>
 
-              <th>Action</th>
+                <th>Action</th>
 
-            </tr>
+              </tr>
 
-          </thead>
+            </thead>
 
-          <tbody>
+            <tbody>
 
-            {
+              {
 
-              orders.map(order => (
+                orders.map(order => (
 
-                <tr key={order.id}>
+                  <tr key={order.id}>
 
-                  <td>{order.id}</td>
+                    <td>
 
-                  <td>
-                    {order.items ? order.items : "-"}
-                  </td>
+                      {order.id}
 
-                  <td>
+                    </td>
 
-                    <select
-                      className="form-select"
-                      value={order.status}
-                      onChange={(e) => {
+                    <td>
 
-                        const value = e.target.value;
+                      {order.items}
 
-                        setOrders(
+                    </td>
 
-                          orders.map(o =>
+                    <td>
 
-                            o.id === order.id
+                      <span className="badge bg-primary">
 
-                              ? { ...o, status: value }
+                        {order.status}
 
-                              : o
+                      </span>
 
-                          )
+                    </td>
 
-                        );
+                    <td>
 
-                      }}
-                    >
+                      ₹ {order.totalAmount.toFixed(2)}
 
-                      <option value="PLACED">
-                        PLACED
-                      </option>
+                    </td>
 
-                      <option value="PREPARING">
-                        PREPARING
-                      </option>
+                    <td>
 
-                      <option value="OUT FOR DELIVERY">
-                        OUT FOR DELIVERY
-                      </option>
+                      <button
 
-                      <option value="DELIVERED">
-                        DELIVERED
-                      </option>
+                        className="btn btn-danger btn-sm"
 
-                    </select>
+                        onClick={() => cancelOrder(order.id)}
 
-                  </td>
+                      >
 
-                  <td>
-                    ₹ {order.totalAmount.toFixed(2)}
-                  </td>
+                        Cancel Order
 
-                  <td>
+                      </button>
 
-                    <button
-                      className="btn btn-primary btn-sm me-2"
-                      onClick={() => updateStatus(order.id, order.status)}
-                    >
-                      Update
-                    </button>
+                    </td>
 
-                    <button
-                      className="btn btn-danger btn-sm"
-                      onClick={() => deleteOrder(order.id)}
-                    >
-                      Delete
-                    </button>
+                  </tr>
 
-                  </td>
+                ))
 
-                </tr>
+              }
 
-              ))
+            </tbody>
 
-            }
-
-          </tbody>
-
-        </table>
+          </table>
 
       }
 

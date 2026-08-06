@@ -11,8 +11,7 @@ services:
 
     container_name: thulasi-mysql
 
-    restart: always
-
+restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: thulasi_chats
@@ -42,8 +41,7 @@ services:
 
     container_name: thulasi-backend
 
-    restart: always
-
+restart: unless-stopped
     depends_on:
       mysql:
         condition: service_healthy
@@ -73,8 +71,7 @@ services:
 
     container_name: thulasi-frontend
 
-    restart: always
-
+restart: unless-stopped
     depends_on:
       - backend
 

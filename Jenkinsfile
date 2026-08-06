@@ -2,18 +2,15 @@ pipeline {
 
     agent any
 
-    options {
-        timestamps()
-        disableConcurrentBuilds()
-    }
-
     environment {
 
-        PROJECT_NAME = "Thulasi-Bangarpet-Chats"
+        DOCKER_USERNAME = "gani4152"
 
-        COMPOSE_FILE = "docker-compose.yml"
+        BACKEND_IMAGE = "gani4152/thulasi-chats-backend"
 
-        BACKEND_DIR = "backend"
+        FRONTEND_IMAGE = "gani4152/thulasi-chats-frontend"
+
+        IMAGE_TAG = "latest"
 
     }
 
@@ -23,19 +20,18 @@ pipeline {
 
             steps {
 
-                echo "========== Checking out source code =========="
-
                 checkout scm
 
             }
 
         }
 
-        stage('Verify Environment') {
+        stage('Verify Tools') {
 
             steps {
 
                 sh 'java -version'
+                sh './backend/mvnw -version'
                 sh 'docker --version'
                 sh 'docker compose version'
 
@@ -43,13 +39,12 @@ pipeline {
 
         }
 
-        stage('Build Spring Boot') {
+        stage('Build Backend') {
 
             steps {
 
-                dir("${BACKEND_DIR}") {
+                dir('backend') {
 
-                    sh 'chmod +x mvnw'
                     sh './mvnw clean package -DskipTests'
 
                 }
@@ -62,41 +57,66 @@ pipeline {
 
             steps {
 
-                sh "docker compose -f ${COMPOSE_FILE} build --no-cache"
+                sh 'docker compose build'
 
             }
 
         }
 
-        stage('Deploy Application') {
+        stage('Docker Hub Login') {
 
             steps {
 
-                sh "docker compose -f ${COMPOSE_FILE} down || true"
+                withCredentials([usernamePassword(
+                        credentialsId: 'dockerhub-creds',
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
+                )]) {
 
-                sh "docker compose -f ${COMPOSE_FILE} up -d"
+                    sh '''
+                    echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                    '''
+
+                }
 
             }
 
         }
 
-        stage('Verify Deployment') {
+        stage('Tag Images') {
 
             steps {
 
-                sh 'docker ps'
-
-                sh 'docker compose ps'
+                sh '''
+                docker tag thulasi-chats-backend:1.0 $BACKEND_IMAGE:$IMAGE_TAG
+                docker tag thulasi-chats-frontend:1.0 $FRONTEND_IMAGE:$IMAGE_TAG
+                '''
 
             }
 
         }
 
-        stage('Docker Cleanup') {
+        stage('Push Images') {
 
             steps {
 
-                sh 'docker image prune -f'
+                sh '''
+                docker push $BACKEND_IMAGE:$IMAGE_TAG
+                docker push $FRONTEND_IMAGE:$IMAGE_TAG
+                '''
+
+            }
+
+        }
+
+        stage('Deploy') {
+
+            steps {
+
+                sh '''
+                docker compose down
+                docker compose up -d
+                '''
 
             }
 
@@ -108,26 +128,23 @@ pipeline {
 
         success {
 
-            echo "=============================================="
+            echo "====================================="
             echo "Deployment Successful"
-            echo "Frontend : http://13.207.126.116:3000"
-            echo "Backend  : http://13.207.126.116:8081"
-            echo "=============================================="
+            echo "====================================="
 
         }
 
         failure {
 
-            echo "=============================================="
-            echo "Deployment Failed"
-            echo "Check Jenkins Console Output"
-            echo "=============================================="
+            echo "====================================="
+            echo "Pipeline Failed"
+            echo "====================================="
 
         }
 
         always {
 
-            sh 'docker compose ps || true'
+            sh 'docker image prune -f'
 
         }
 

@@ -2,10 +2,18 @@ pipeline {
 
     agent any
 
+    options {
+        timestamps()
+        disableConcurrentBuilds()
+    }
+
     environment {
 
+        PROJECT_NAME = "Thulasi-Bangarpet-Chats"
+
+        COMPOSE_FILE = "docker-compose.yml"
+
         BACKEND_DIR = "backend"
-        FRONTEND_DIR = "frontend"
 
     }
 
@@ -15,29 +23,33 @@ pipeline {
 
             steps {
 
+                echo "========== Checking out source code =========="
+
                 checkout scm
 
             }
 
         }
 
-        stage('Show Workspace') {
+        stage('Verify Environment') {
 
             steps {
 
-                sh 'pwd'
-                sh 'ls -la'
+                sh 'java -version'
+                sh 'docker --version'
+                sh 'docker compose version'
 
             }
 
         }
 
-        stage('Backend Build') {
+        stage('Build Spring Boot') {
 
             steps {
 
                 dir("${BACKEND_DIR}") {
 
+                    sh 'chmod +x mvnw'
                     sh './mvnw clean package -DskipTests'
 
                 }
@@ -46,29 +58,45 @@ pipeline {
 
         }
 
-        stage('Frontend Install') {
+        stage('Build Docker Images') {
 
             steps {
 
-                dir("${FRONTEND_DIR}") {
-
-                    sh 'npm install'
-
-                }
+                sh "docker compose -f ${COMPOSE_FILE} build --no-cache"
 
             }
 
         }
 
-        stage('Frontend Build') {
+        stage('Deploy Application') {
 
             steps {
 
-                dir("${FRONTEND_DIR}") {
+                sh "docker compose -f ${COMPOSE_FILE} down || true"
 
-                    sh 'npm run build'
+                sh "docker compose -f ${COMPOSE_FILE} up -d"
 
-                }
+            }
+
+        }
+
+        stage('Verify Deployment') {
+
+            steps {
+
+                sh 'docker ps'
+
+                sh 'docker compose ps'
+
+            }
+
+        }
+
+        stage('Docker Cleanup') {
+
+            steps {
+
+                sh 'docker image prune -f'
 
             }
 
@@ -80,23 +108,26 @@ pipeline {
 
         success {
 
-            echo '====================================='
-            echo 'BUILD COMPLETED SUCCESSFULLY'
-            echo '====================================='
+            echo "=============================================="
+            echo "Deployment Successful"
+            echo "Frontend : http://13.207.126.116:3000"
+            echo "Backend  : http://13.207.126.116:8081"
+            echo "=============================================="
 
         }
 
         failure {
 
-            echo '====================================='
-            echo 'BUILD FAILED'
-            echo '====================================='
+            echo "=============================================="
+            echo "Deployment Failed"
+            echo "Check Jenkins Console Output"
+            echo "=============================================="
 
         }
 
         always {
 
-            cleanWs()
+            sh 'docker compose ps || true'
 
         }
 
